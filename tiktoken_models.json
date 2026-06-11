@@ -1,0 +1,82 @@
+{
+    "ada": {
+        "encoding": "r50k_base",
+        "input_cost_per_1m_tokens": 0.10
+    },
+    "babbage": {
+        "encoding": "r50k_base",
+        "input_cost_per_1m_tokens": 0.40
+    },
+    "babbage-002": {
+        "encoding": "cl100k_base",
+        "input_cost_per_1m_tokens": 1.60
+    },
+    "code-davinci-001": {
+        "encoding": "p50k_base",
+        "input_cost_per_1m_tokens": 20
+    },
+    "code-davinci-002": {
+        "encoding": "p50k_base",
+        "input_cost_per_1m_tokens": 2
+    },
+    "code-search-babbage-code-001": {
+        "encoding": "r50k_base",
+        "input_cost_per_1m_tokens": 5
+    },
+    "curie": {
+        "encoding": "r50k_base",
+        "input_cost_per_1m_tokens": 2
+    },
+    "davinci": {
+        "encoding": "r50k_base",
+        "input_cost_per_1m_tokens": 2
+    },
+    "davinci-002": {
+        "encoding": "cl100k_base",
+        "input_cost_per_1m_tokens": 2
+    },
+    "gpt-3.5-turbo": {
+        "encoding": "cl100k_base",
+        "input_cost_per_1m_tokens": 0.50
+    },
+    "gpt-3.5-turbo-instruct": {
+        "encoding": "cl100k_base",
+        "input_cost_per_1m_tokens": 1.50
+    },
+    "gpt-4.1": {
+        "encoding": "o200k_base",
+        "input_cost_per_1m_tokens": 2
+    },
+    "gpt-4o": {
+        "encoding": "o200k_base",
+        "input_cost_per_1m_tokens": 2.50
+    },
+    "gpt-5": {
+        "encoding": "o200k_base",
+        "input_cost_per_1m_tokens": 1.25
+    },
+    "o1": {
+        "encoding": "o200k_base",
+        "input_cost_per_1m_tokens": 15
+    },
+    "o3": {
+        "encoding": "o200k_base",
+        "input_cost_per_1m_tokens": 2
+    },
+    "o4-mini": {
+        "encoding": "o200k_base",
+        "input_cost_per_1m_tokens": 1.10
+    },
+    "text-embedding-3-large": {
+        "encoding": "cl100k_base",
+        "input_cost_per_1m_tokens": 0.13
+    },
+    "text-embedding-3-small": {
+        "encoding": "cl100k_base",
+        "input_cost_per_1m_tokens": 0.02
+    },
+    "text-embedding-ada-002": {
+        "encoding": "cl100k_base",
+        "input_cost_per_1m_tokens": 0.10
+    }
+}

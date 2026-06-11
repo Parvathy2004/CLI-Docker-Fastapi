@@ -1,0 +1,9 @@
+[
+    {
+        "id": 2,
+        "text": "hello hello",
+        "model": "gpt-5",
+        "tokens": 2,
+        "cost": 2.4999999999999998e-06
+    }
+]
