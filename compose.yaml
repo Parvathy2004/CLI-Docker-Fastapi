@@ -1,0 +1,39 @@
+services:
+
+  web:
+
+    build: .
+
+    container_name: token-api
+
+    ports:
+      - "8000:8000"
+
+    volumes:
+      - sample-data:/code/data
+
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://localhost:8000/')"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+    develop:
+      watch:
+
+        - action: sync+restart
+          path: .
+          target: /code
+
+        - action: rebuild
+          path: requirements.txt
+
+volumes:
+  sample-data:

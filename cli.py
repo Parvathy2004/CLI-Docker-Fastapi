@@ -6,9 +6,10 @@ import os
 
 app = FastAPI()
 
-# Load model prices
 with open("tiktoken_models.json", "r") as f:
     MODEL_PRICES = json.load(f)
+
+FILE_NAME = "/code/data/sample.json"
 
 
 class Item(BaseModel):
@@ -16,29 +17,24 @@ class Item(BaseModel):
     model: str
 
 
-class SampleItem(BaseModel):
-    id: int
-    text: str
-    model: str
-    tokens: int
-    cost: float
-
-
-FILE_NAME = "sample.json"
-
-
 def load_samples():
+
     if not os.path.exists(FILE_NAME):
         return []
 
     with open(FILE_NAME, "r") as f:
+
         try:
             return json.load(f)
+
         except json.JSONDecodeError:
             return []
 
 
 def save_samples(samples):
+
+    os.makedirs("/code/data", exist_ok=True)
+
     with open(FILE_NAME, "w") as f:
         json.dump(samples, f, indent=4)
 
@@ -55,7 +51,7 @@ def get_models():
 
 # CREATE + TOKEN ESTIMATION
 @app.post("/estimate")
-def token_cost(item: Item):
+def estimate(item: Item):
 
     if item.model not in MODEL_PRICES:
         return {"error": "Unsupported model"}
@@ -70,10 +66,8 @@ def token_cost(item: Item):
 
     samples = load_samples()
 
-    sample_id = len(samples) + 1
-
     sample = {
-        "id": sample_id,
+        "id": len(samples) + 1,
         "text": item.text,
         "model": item.model,
         "tokens": token_count,
@@ -85,7 +79,7 @@ def token_cost(item: Item):
     save_samples(samples)
 
     return {
-        "id": sample_id,
+        "id": sample["id"],
         "token_count": token_count,
         "token_cost": cost,
         "model": item.model
@@ -105,6 +99,7 @@ def get_sample(sample_id: int):
     samples = load_samples()
 
     for sample in samples:
+
         if sample["id"] == sample_id:
             return sample
 
