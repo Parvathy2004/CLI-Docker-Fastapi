@@ -3,8 +3,18 @@ from pydantic import BaseModel
 import tiktoken
 import json
 import os
+from openai import OpenAI
+from dotenv import load_dotenv
+import time
+import csv
 
 app = FastAPI()
+
+load_dotenv()
+
+client = OpenAI(
+    api_key=os.getenv("OPENAI_API_KEY")
+)
 
 with open("tiktoken_models.json", "r") as f:
     MODEL_PRICES = json.load(f)
@@ -16,6 +26,10 @@ class Item(BaseModel):
     text: str
     model: str
 
+class PromptRequest(BaseModel):
+    prompt: str
+    temperature: float = 0.7
+    top_p: float = 0.9
 
 def load_samples():
 
@@ -38,6 +52,40 @@ def save_samples(samples):
     with open(FILE_NAME, "w") as f:
         json.dump(samples, f, indent=4)
 
+def log_llm_request(data):
+
+    file_exists = os.path.exists(
+        "llm_logs.csv"
+    )
+
+    with open(
+        "llm_logs.csv",
+        "a",
+        newline="",
+        encoding="utf-8"
+    ) as f:
+
+        writer = csv.writer(f)
+
+        if not file_exists:
+
+            writer.writerow([
+                "prompt",
+                "temperature",
+                "top_p",
+                "input_tokens",
+                "output_tokens",
+                "elapsed_time"
+            ])
+
+        writer.writerow([
+            data["prompt"],
+            data["temperature"],
+            data["top_p"],
+            data["input_tokens"],
+            data["output_tokens"],
+            data["elapsed_time"]
+        ])
 
 @app.get("/")
 def root():
@@ -156,4 +204,47 @@ def delete_sample(sample_id: int):
     return {
         "message": "Sample deleted successfully",
         "sample_id": sample_id
+    }
+
+@app.post("/generate")
+def generate_text(request: PromptRequest):
+
+    start = time.time()
+
+    response = client.chat.completions.create(
+        model="gpt-4.1-mini",
+        messages=[
+            {
+                "role": "user",
+                "content": request.prompt
+            }
+        ],
+        temperature=request.temperature,
+        top_p=request.top_p
+    )
+
+    elapsed_time = round(
+        time.time() - start,
+        2
+    )
+
+    answer = response.choices[0].message.content
+
+    input_tokens = response.usage.prompt_tokens
+    output_tokens = response.usage.completion_tokens
+
+    log_llm_request({
+        "prompt": request.prompt,
+        "temperature": request.temperature,
+        "top_p": request.top_p,
+        "input_tokens": input_tokens,
+        "output_tokens": output_tokens,
+        "elapsed_time": elapsed_time
+    })
+
+    return {
+        "answer": answer,
+        "input_tokens": input_tokens,
+        "output_tokens": output_tokens,
+        "elapsed_time": elapsed_time
     }
